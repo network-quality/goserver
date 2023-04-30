@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/brutella/dnssd v1.2.7
-	github.com/icio/mkcert v0.1.2
+	github.com/likexian/selfca v0.14.9
 	github.com/quic-go/quic-go v0.34.0
 	golang.org/x/net v0.9.0
 	golang.org/x/sys v0.7.0

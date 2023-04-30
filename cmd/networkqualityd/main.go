@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"crypto/x509"
 	"errors"
 	"flag"
 	"fmt"
@@ -21,7 +22,7 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/icio/mkcert"
+	"github.com/likexian/selfca"
 	nqserver "github.com/network-quality/goserver"
 
 	// Do *not* remove this import. Per https://pkg.go.dev/net/http/pprof:
@@ -100,6 +101,7 @@ func main() {
 		}
 
 		certSpecified = true
+		var caCertificate []*x509.Certificate
 
 		dir, err := os.MkdirTemp("", "nqd")
 		if err != nil {
@@ -107,22 +109,49 @@ func main() {
 		}
 		defer os.RemoveAll(dir)
 
-		cert, err := mkcert.Exec(
-			mkcert.Domains(*configName),
-			// RequireTrusted(true) tells Exec to return an error if the CA isn't
-			// in the trust stores.
-			mkcert.RequireTrusted(false),
-			// CertFile and KeyFile override the default behaviour of generating
-			// the keys in the local directory.
-			mkcert.CertFile(filepath.Join(dir, "cert.pem")),
-			mkcert.KeyFile(filepath.Join(dir, "key.pem")),
-		)
+		config := selfca.Certificate{
+			IsCA:       true,
+			CommonName: "network-quality goserver Root CA",
+			NotBefore:  time.Now(),
+			NotAfter:   time.Now().Add(time.Duration(365*24) * time.Hour),
+		}
 
+		certificate, caKey, err := selfca.GenerateCertificate(config)
 		if err != nil {
 			log.Fatal(err)
 		}
-		*certFilename = cert.File
-		*keyFilename = cert.KeyFile
+
+		caBaseName := filepath.Join(dir, "ca")
+		if err = selfca.WriteCertificate(caBaseName, certificate, caKey); err != nil {
+			log.Fatal(err)
+		}
+
+		caCertificate, err = x509.ParseCertificates(certificate)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		certificate, key, err := selfca.GenerateCertificate(selfca.Certificate{
+			IsCA:          false,
+			CommonName:    *configName,
+			KeySize:       2048,
+			NotBefore:     config.NotBefore,
+			NotAfter:      config.NotAfter,
+			Hosts:         []string{*configName},
+			CAKey:         caKey,
+			CACertificate: caCertificate[0],
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		baseName := filepath.Join(dir, *configName)
+		if err = selfca.WriteCertificate(baseName, certificate, key); err != nil {
+			log.Fatal(err)
+		}
+
+		*certFilename = fmt.Sprintf("%s.crt", baseName)
+		*keyFilename = fmt.Sprintf("%s.key", baseName)
 	}
 
 	var cfg *tls.Config

@@ -9,7 +9,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"html/template"
 	"log"
 	"net"
 	"net/http"
@@ -58,10 +57,9 @@ var (
 	certFilename = flag.String("cert-file", "", "cert to use")
 	keyFilename  = flag.String("key-file", "", "key to use")
 
-	configName   = flag.String("config-name", "networkquality.example.com", "domain to generate config for")
-	publicName   = flag.String("public-name", "", "host to generate config for (same as -config-name if not specified)")
-	contextPath  = flag.String("context-path", "", "context-path if behind a reverse-proxy")
-	templateName = flag.String("template", "config.json.in", "template json config")
+	configName  = flag.String("config-name", "networkquality.example.com", "domain to generate config for")
+	publicName  = flag.String("public-name", "", "host to generate config for (same as -config-name if not specified)")
+	contextPath = flag.String("context-path", "", "context-path if behind a reverse-proxy")
 )
 
 const (
@@ -84,11 +82,6 @@ func main() {
 
 	operatingCtx, operatingCtxCancel := context.WithCancel(context.Background())
 	defer operatingCtxCancel()
-
-	tmpl, err := template.ParseFiles(*templateName)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	certSpecified := false
 	if len(*certFilename) > 0 && len(*keyFilename) > 0 {
@@ -234,7 +227,6 @@ func main() {
 		m := &nqserver.Server{
 			PublicHostPort: hostPort,
 			PublicPort:     port,
-			Template:       tmpl,
 			EnableCORS:     *enableCORS,
 			ContextPath:    *contextPath,
 			Scheme:         scheme,

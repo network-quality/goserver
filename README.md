@@ -64,8 +64,6 @@ Usage of ./networkqualityd:
         The port to listen on for HTTPS/H2C/HTTP3 measurement accesses (default 4043)
   -socket-send-buffer-size uint
         The size of the socket send buffer via TCP_NOTSENT_LOWAT. Zero/unset means to leave unset
-  -template string
-        template json config (default "config.json.in")
   -tos string
         set TOS for listening socket (default "0")
   -version
@@ -134,7 +132,6 @@ You can use environment variables to configure any of the `networkqualityd` comm
 | `-config-name` | `config_name` |
 | `-listen-addr` | `listen_addr` |
 | `-public-name` | `public_name` |
-| `-template` | `template` |
 | `-debug` | *see below* |
 
 If you want to configure whether the server runs in debug mode, simply set the `debug` environment variable to `-debug`. If you enable debugging, you will also need to create a map between a port on the host and port 9090 on the container (e.g., `-p 9090:9090`).

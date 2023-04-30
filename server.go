@@ -3,10 +3,9 @@
 package goserver
 
 import (
-	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -76,13 +75,12 @@ type Server struct {
 	PublicHostPort string
 	ContextPath    string
 	Scheme         string
-	Template       *template.Template
 	EnableCORS     bool
 	EnableH3AltSvc bool
 	BytesServed    uint64
 	BytesReceived  uint64
 
-	generatedConfig *bytes.Buffer
+	generatedConfig []byte
 	once            sync.Once
 }
 
@@ -124,21 +122,36 @@ func (m *Server) PrintStats() {
 }
 
 func (m *Server) generateConfig() {
-	tv := struct {
-		SmallDownloadURL string
-		LargeDownloadURL string
-		UploadURL        string
+	urls := struct {
+		SmallDownloadURL      string `json:"small_download_url"`
+		LargeDownloadURL      string `json:"large_download_url"`
+		UploadURL             string `json:"upload_url"`
+		SmallHTTPSDownloadURL string `json:"small_https_download_url"`
+		LargeHTTPSDownloadURL string `json:"large_https_download_url"`
+		HTTPSUploadURL        string `json:"https_upload_url"`
 	}{
-		SmallDownloadURL: m.generateSmallDownloadURL(),
-		LargeDownloadURL: m.generateLargeDownloadURL(),
-		UploadURL:        m.generateUploadURL(),
+		SmallDownloadURL:      m.generateSmallDownloadURL(),
+		LargeDownloadURL:      m.generateLargeDownloadURL(),
+		UploadURL:             m.generateUploadURL(),
+		SmallHTTPSDownloadURL: m.generateSmallDownloadURL(),
+		LargeHTTPSDownloadURL: m.generateLargeDownloadURL(),
+		HTTPSUploadURL:        m.generateUploadURL(),
 	}
 
-	var b bytes.Buffer
-	if err := m.Template.Execute(&b, tv); err != nil {
-		log.Fatalf("Error rendering config: %s", err)
+	resp := struct {
+		Version int         `json:"version"`
+		Urls    interface{} `json:"urls"`
+	}{
+		Version: 1,
+		Urls:    urls,
 	}
-	m.generatedConfig = &b
+
+	b, err := json.MarshalIndent(resp, "", "    ")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	m.generatedConfig = b
 }
 
 func (m *Server) ConfigHandler(w http.ResponseWriter, r *http.Request) {
@@ -158,7 +171,7 @@ func (m *Server) ConfigHandler(w http.ResponseWriter, r *http.Request) {
 		setCors(w.Header())
 	}
 
-	_, err := w.Write(m.generatedConfig.Bytes())
+	_, err := w.Write(m.generatedConfig)
 	if err != nil {
 		log.Printf("could not write response: %s", err)
 	}

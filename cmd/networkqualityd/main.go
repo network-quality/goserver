@@ -375,7 +375,7 @@ func main() {
 
 	for _, server := range servers {
 		if err := server.Shutdown(operatingCtx); err != nil {
-			log.Printf("error shuting down: %s", err)
+			log.Printf("error shutting down: %s", err)
 		}
 	}
 

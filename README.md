@@ -21,10 +21,11 @@ Although we expect this to happen very infrequently, we reserve the right to mak
 
 ## Building (requires Go 1.19+)
 
-### Using the command line
+`make`
 
-1. `go build -o networkqualityd .`
-1. Use the produced `networkqualityd` binary from the command line
+or
+
+`go install ./...`
 
 ## Running
 
@@ -73,20 +74,32 @@ Usage of ./networkqualityd:
 ### Example run:
 
 ```
-./networkqualityd --cert-file networkquality.example.com.pem --key-file networkquality.example.com-key.pem --public-name networkquality.example.com
-2021/09/07 14:39:05 Network Quality URL: https://networkquality.example.com:4043/config
+./networkqualityd --create-cert --public-name networkquality.example.com
+2023/05/01 10:38:56 Network Quality URL: https://networkquality.example.com:4043/.well-known/nq
+2023/05/01 10:38:56 Enabling H2 on "localhost:4043"
 ```
 
-#### Running client against server:
+#### Running Apple's client against server:
 ```
-networkQuality -C https://networkquality.example.com:4043/config
+networkQuality -C https://networkquality.example.com:4043/.well-known/nq -k
 ==== SUMMARY ====
-Upload capacity: 73.213 Mbps
-Download capacity: 4.269 Gbps
-Upload flows: 12
-Download flows: 12
-Responsiveness: Medium (829 RPM)
+Uplink capacity: 1.649 Gbps
+Downlink capacity: 4.933 Gbps
+Responsiveness: Medium (606 RPM)
+Idle Latency: 3.917 milliseconds
 ```
+
+#### Running the goresponsiveness client against server:
+From the [gorespsonsiveness](https://github.com/network-quality/goresponsiveness) checkout
+```
+go run networkQuality.go --url https://networkquality.example.com:4043/.well-known/nq --insecure-skip-verify
+05-01-2023 17:42:14 UTC Go Responsiveness to networkquality.example.com:4043...
+RPM:  1197 (P90)
+RPM:  1907 (Double-Sided 10% Trimmed Mean)
+Download: 6038.648 Mbps (754.831 MBps), using 9 parallel connections.
+Upload:   1561.561 Mbps (195.195 MBps), using 9 parallel connections.
+```
+
 
 ## Docker
 

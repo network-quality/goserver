@@ -38,7 +38,7 @@ import (
 
 var (
 	insecurePublicPort = flag.Int("insecure-public-port", 0, "The port to listen on for HTTP measurement accesses")
-	publicPort         = flag.Int("public-port", 4043, "The port to listen on for HTTPS/H2C/HTTP3 measurement accesses")
+	publicPort         = flag.Int("public-port", defaultSecurePublicPort, "The port to listen on for HTTPS/H2C/HTTP3 measurement accesses")
 
 	listenAddr = flag.String("listen-addr", "localhost", "address to bind to")
 
@@ -64,6 +64,7 @@ var (
 
 const (
 	defaultInsecurePublicPort = 4080
+	defaultSecurePublicPort   = 4043
 )
 
 func main() {
@@ -281,9 +282,7 @@ func main() {
 
 		mynl := nl
 
-		if scheme == "https" {
-			log.Printf("Network Quality URL: %s://%s:%d%s/.well-known/nq", scheme, *configName, port, *contextPath)
-		}
+		log.Printf("Network Quality URL: %s://%s:%d%s/.well-known/nq", scheme, *configName, port, *contextPath)
 
 		go func(scheme string, nl net.Listener, port int) {
 			if *enableH2C {

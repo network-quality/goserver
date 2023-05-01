@@ -155,7 +155,7 @@ func (m *Server) generateConfig() {
 }
 
 func (m *Server) ConfigHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
+	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
@@ -190,7 +190,7 @@ func (m *Server) generateUploadURL() string {
 }
 
 func (h *handlers) smallHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" && r.Method != "HEAD" {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
@@ -208,7 +208,7 @@ func (h *handlers) smallHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *handlers) largeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" && r.Method != "HEAD" {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
@@ -220,7 +220,7 @@ func (h *handlers) largeHandler(w http.ResponseWriter, r *http.Request) {
 		setCors(w.Header())
 	}
 
-	if r.Method != "GET" {
+	if r.Method != http.MethodGet {
 		return
 	}
 
@@ -278,7 +278,7 @@ func (h *handlers) slurpHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 }
 
 // countingDiscard implements ReaderFrom as an optimization so Copy to
@@ -307,7 +307,7 @@ var blackHolePool = sync.Pool{
 
 func (cb countingDiscard) ReadFrom(r io.Reader) (n int64, err error) {
 	bufp := blackHolePool.Get().(*[]byte)
-	readSize := 0
+	var readSize int
 	for {
 		readSize, err = r.Read(*bufp)
 		n += int64(readSize)

@@ -3,14 +3,21 @@ run:
 
 linters:
   enable:
+    - asciicheck
+    - bidichk
     - bodyclose
+    - contextcheck
     - depguard
     - dogsled
+    - dupl
+    - dupword
     - durationcheck
     - errcheck
     - exportloopref
     - exportloopref
+    - forbidigo
     - godox
+    - goerr113
     - gofmt
     - goimports
     - gomoddirectives
@@ -18,15 +25,19 @@ linters:
     - goprintffuncname
     - makezero
     - misspell
+    - musttag
     - nilerr
+    - nilnil
     - noctx
     - nolintlint
+    - nosprintfhostport
     - prealloc
     - predeclared
     - revive
     - rowserrcheck
     - stylecheck
     - tparallel
+    - unconvert
+    - usestdlibvars
     - wastedassign
     - whitespace
-    - asciicheck

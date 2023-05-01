@@ -19,7 +19,7 @@ Project maintainers are expected to always follow the project’s [_Code of Cond
 Although we expect this to happen very infrequently, we reserve the right to make changes, including changes to the configuration format and scope, to the project at any time.
 
 
-## Building (requires Go 1.17+)
+## Building (requires Go 1.19+)
 
 ### Using the command line
 

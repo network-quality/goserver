@@ -1,16 +1,34 @@
 
-## A Go implementation of the Network Quality Server
+# Network Quality Go Server
 
-### Building (requires Go 1.17+)
+## Welcome!
+The _Network Quality Go Server_ project originally started out as part of the [_Network Quality Server_](https://github.com/network-quality/server) project. For ease of integration with other projects, it was decided this project would be better served by being it's own repo/project.
 
-#### Using the command line
+## Contributing
+Please review [_how to contribute_](CONTRIBUTING.md) if you would like to submit a pull request.
+
+## Asking Questions and Discussing Ideas
+If you have any questions you’d like to ask publicly, or ideas you’d like to discuss, please [_raise a GitHub issue_](https://github.com/network-quality/goserver/issues).
+##
+## Project Maintenance
+Project maintenance involves, but is not limited to, adding clarity to incoming [_issues_](https://github.com/network-quality/goserver/issues) and reviewing pull requests. Project maintainers can approve and merge pull requests. Reviewing a pull request involves judging that a proposed contribution follows the project’s guidelines, as described by the [_guide to contributing_](CONTRIBUTING.md).
+
+Project maintainers are expected to always follow the project’s [_Code of Conduct_](CODE_OF_CONDUCT.md), and help to model it for others.
+
+## Project Governance
+Although we expect this to happen very infrequently, we reserve the right to make changes, including changes to the configuration format and scope, to the project at any time.
+
+
+## Building (requires Go 1.17+)
+
+### Using the command line
 
 1. `go build -o networkqualityd .`
 1. Use the produced `networkqualityd` binary from the command line
 
-### Running
+## Running
 
-#### Usage:
+### Usage:
 
 ```
 Usage of ./networkqualityd:
@@ -54,14 +72,14 @@ Usage of ./networkqualityd:
         Show version
 ```
 
-#### Example run:
+### Example run:
 
 ```
 ./networkqualityd --cert-file networkquality.example.com.pem --key-file networkquality.example.com-key.pem --public-name networkquality.example.com
 2021/09/07 14:39:05 Network Quality URL: https://networkquality.example.com:4043/config
 ```
 
-##### Running client against server:
+#### Running client against server:
 ```
 networkQuality -C https://networkquality.example.com:4043/config
 ==== SUMMARY ====
@@ -72,7 +90,7 @@ Download flows: 12
 Responsiveness: Medium (829 RPM)
 ```
 
-### Docker
+## Docker
 
 The server can be run in a docker container. The `Dockerfile` in this repository
 will generate a container that can run the server. To build the container,

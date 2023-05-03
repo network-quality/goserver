@@ -3,7 +3,7 @@ MAKEFLAGS += --no-builtin-rules
 
 APP          := networkqualityd
 GIT_VERSION  := $(shell git describe --always --long)
-PKG          := github.com/network-quality/server/go/server
+PKG          := github.com/network-quality/goserver
 LDFLAGS      := -ldflags "-w -X $(PKG).GitVersion=$(GIT_VERSION)"
 GO           ?= go
 

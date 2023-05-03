@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/brutella/dnssd"
-	"github.com/network-quality/server/go/server"
+	"github.com/network-quality/goserver"
 )
 
 func getNetInterfaces() []net.Interface {
@@ -33,7 +33,7 @@ func getInterfaceIPs(iface net.Interface) []net.IP {
 }
 
 func configureAnnouncer(ips []net.IP, hostName string, port int) (dnssd.Responder, dnssd.ServiceHandle, error) {
-	log.Printf("announcing %s %s", hostName, server.ServiceType)
+	log.Printf("announcing %s %s", hostName, goserver.ServiceType)
 	// We only want to advertise on the interfaces that go with the addresses!
 	interfaces := make([]string, 0)
 
@@ -62,7 +62,7 @@ InterfacesLoop:
 	}
 	cfg := dnssd.Config{
 		Name:   fmt.Sprintf("go-%s", hostName),
-		Type:   server.ServiceType,
+		Type:   goserver.ServiceType,
 		Host:   hostName,
 		IPs:    ips,
 		Ifaces: interfaces,

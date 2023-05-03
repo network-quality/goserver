@@ -1,4 +1,4 @@
-module github.com/network-quality/server/go/server
+module github.com/network-quality/goserver
 
 go 1.18
 

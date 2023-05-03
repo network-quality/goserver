@@ -22,7 +22,7 @@ import (
 	"sync"
 
 	"github.com/icio/mkcert"
-	nqserver "github.com/network-quality/server/go/server"
+	nqserver "github.com/network-quality/goserver"
 
 	// Do *not* remove this import. Per https://pkg.go.dev/net/http/pprof:
 	// The package is typically only imported for the side effect of registering

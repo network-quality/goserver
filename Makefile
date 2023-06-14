@@ -7,7 +7,7 @@ PKG          := github.com/network-quality/goserver
 LDFLAGS      := -ldflags "-w -X $(PKG).GitVersion=$(GIT_VERSION)"
 GO           ?= go
 
-COMMON_GO_FILES := *.go
+COMMON_GO_FILES := *.go go.mod go.sum
 
 CMD_SOURCES     := $(shell find cmd -name main.go)
 DEV_TARGETS     := $(patsubst cmd/%/main.go,%,$(CMD_SOURCES))

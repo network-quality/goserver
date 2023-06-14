@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"strings"
@@ -61,7 +60,7 @@ InterfacesLoop:
 		hostName = nameParts[0]
 	}
 	cfg := dnssd.Config{
-		Name:   fmt.Sprintf("go-%s", hostName),
+		Name:   hostName,
 		Type:   goserver.ServiceType,
 		Host:   hostName,
 		IPs:    ips,

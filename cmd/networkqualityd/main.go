@@ -56,6 +56,7 @@ var (
 	enableL4s          = flag.Bool("enable-l4s", false, fmt.Sprintf("Enable L4S using the default congestion control algorithm, %s.", defaultL4SCongestionControlAlgorithm))
 	enableL4sAlgorithm = flag.String("enable-l4s-algorithm", "", "Enable L4S using the specified congestion control algorithm")
 
+	announceName = flag.String("announceName", "", "Name to use for DNS-SD announcement (defaults to --config-name")
 	tosString    = flag.String("tos", "0", "set TOS for listening socket")
 	certFilename = flag.String("cert-file", "", "cert to use")
 	keyFilename  = flag.String("key-file", "", "key to use")
@@ -150,6 +151,10 @@ func main() {
 
 		*certFilename = fmt.Sprintf("%s.crt", baseName)
 		*keyFilename = fmt.Sprintf("%s.key", baseName)
+	}
+
+	if len(*announceName) == 0 {
+		*announceName = *configName
 	}
 
 	var cfg *tls.Config
@@ -367,7 +372,7 @@ func main() {
 
 		// Setup announcer for https configuration port
 		if *announce && scheme == "https" {
-			announceResponder, announceHandle, err := configureAnnouncer(ips, *configName, port)
+			announceResponder, announceHandle, err := configureAnnouncer(ips, *announceName, port)
 			if err != nil {
 				log.Fatalf("Could not announce the server instance: %v", err)
 			}

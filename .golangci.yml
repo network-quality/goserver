@@ -7,7 +7,6 @@ linters:
     - bidichk
     - bodyclose
     - contextcheck
-    - depguard
     - dogsled
     - dupl
     - dupword

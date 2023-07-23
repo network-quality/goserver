@@ -53,6 +53,10 @@ Usage of ./networkqualityd:
         enable HTTP/2 (default true)
   -enable-http3
         enable HTTP/3
+  -enable-l4s
+        Enable L4S using the default congestion control algorithm, prague.
+  -enable-l4s-algorithm string
+        Enable L4S using the specified congestion control algorithm
   -insecure-public-port int
         The port to listen on for HTTP measurement accesses
   -key-file string

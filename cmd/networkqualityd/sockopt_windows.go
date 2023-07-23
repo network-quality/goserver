@@ -14,6 +14,10 @@ func setTCPNotSentLowat(conn syscall.RawConn, value int) error {
 	return fmt.Errorf("platform not supported")
 }
 
+func setTCPL4S(conn syscall.RawConn, value int) error {
+	return fmt.Errorf("platform not supported")
+}
+
 func setIPTos(network string, conn syscall.RawConn, value int) error {
 	return fmt.Errorf("platform not supported")
 }

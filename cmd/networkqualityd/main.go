@@ -53,6 +53,9 @@ var (
 
 	socketSendBuffer = flag.Uint("socket-send-buffer-size", 0, "The size of the socket send buffer via TCP_NOTSENT_LOWAT. Zero/unset means to leave unset")
 
+	enableL4s          = flag.Bool("enable-l4s", false, fmt.Sprintf("Enable L4S using the default congestion control algorithm, %s.", defaultL4SCongestionControlAlgorithm))
+	enableL4sAlgorithm = flag.String("enable-l4s-algorithm", "", "Enable L4S using the specified congestion control algorithm")
+
 	tosString    = flag.String("tos", "0", "set TOS for listening socket")
 	certFilename = flag.String("cert-file", "", "cert to use")
 	keyFilename  = flag.String("key-file", "", "key to use")
@@ -63,8 +66,9 @@ var (
 )
 
 const (
-	defaultInsecurePublicPort = 4080
-	defaultSecurePublicPort   = 4043
+	defaultInsecurePublicPort            = 4080
+	defaultSecurePublicPort              = 4043
+	defaultL4SCongestionControlAlgorithm = "prague"
 )
 
 func main() {
@@ -257,6 +261,17 @@ func main() {
 				if *socketSendBuffer > 0 {
 					log.Printf("setting TCP_NOTSENT_LOWAT to %d", *socketSendBuffer)
 					if err := setTCPNotSentLowat(conn, int(*socketSendBuffer)); err != nil {
+						return err
+					}
+				}
+
+				if *enableL4s || *enableL4sAlgorithm != "" {
+					actualL4SCongestionControlAlgorithm := defaultL4SCongestionControlAlgorithm
+					if *enableL4sAlgorithm != "" {
+						actualL4SCongestionControlAlgorithm = *enableL4sAlgorithm
+					}
+					log.Printf("setting TCP_CONGESTION to %v", actualL4SCongestionControlAlgorithm)
+					if err := setTCPL4S(conn, actualL4SCongestionControlAlgorithm); err != nil {
 						return err
 					}
 				}

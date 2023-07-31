@@ -1,3 +1,4 @@
 /networkqualityd
+cmd/networkqualityd/networkqualityd
 *pem
 /ca.*

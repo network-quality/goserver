@@ -24,16 +24,6 @@ func setTCPNotSentLowat(conn syscall.RawConn, value int) error {
 	return setsockoptErr
 }
 
-func setTCPL4S(conn syscall.RawConn, value string) error {
-	var setsockoptErr error
-	if err := conn.Control(func(fd uintptr) {
-		setsockoptErr = syscall.SetsockoptString(int(fd), unix.IPPROTO_TCP, unix.TCP_CONGESTION, value)
-	}); err != nil {
-		return err
-	}
-	return setsockoptErr
-}
-
 func setIPTos(network string, conn syscall.RawConn, value int) error {
 	var setsockoptErr error
 	if err := conn.Control(func(fd uintptr) {

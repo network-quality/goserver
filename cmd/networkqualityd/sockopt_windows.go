@@ -6,18 +6,17 @@
 package main
 
 import (
-	"fmt"
 	"syscall"
 )
 
 func setTCPNotSentLowat(conn syscall.RawConn, value int) error {
-	return fmt.Errorf("platform not supported")
+	return errUnsupportedPlatform
 }
 
-func setTCPL4S(conn syscall.RawConn, value int) error {
-	return fmt.Errorf("platform not supported")
+func setTCPL4S(conn syscall.RawConn, value string) error {
+	return errUnsupportedPlatform
 }
 
 func setIPTos(network string, conn syscall.RawConn, value int) error {
-	return fmt.Errorf("platform not supported")
+	return errUnsupportedPlatform
 }

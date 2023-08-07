@@ -19,7 +19,7 @@ jobs:
           go-version: '1.20'
 
       - name: Build
-        run: make build
+        run: make ci
 
       - name: Test
         run: make test

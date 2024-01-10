@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/brutella/dnssd v1.2.9
 	github.com/likexian/selfca v0.14.9
-	github.com/quic-go/quic-go v0.39.0
+	github.com/quic-go/quic-go v0.39.4
 	golang.org/x/net v0.17.0
 	golang.org/x/sys v0.13.0
 )

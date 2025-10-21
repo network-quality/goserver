@@ -324,7 +324,7 @@ func main() {
 						server := http3.Server{
 							Handler:    mux,
 							Addr:       fmt.Sprintf("%s:%d", *listenAddr, port),
-							QuicConfig: &quic.Config{},
+							QUICConfig: &quic.Config{},
 						}
 						// No Shutdown(...) available for http3.Server
 
